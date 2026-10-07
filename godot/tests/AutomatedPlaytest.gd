@@ -25,7 +25,7 @@ func _run_playtest() -> void:
 		for relay_position in EXPECTED_SOLUTIONS[level]:
 			game._on_cell_pressed(game._index(relay_position))
 		game._send_pulse()
-		var solved := game.status_label.text.contains("SIGNAL RECEIVED") or game.status_label.text.contains("ALL FIELD TESTS COMPLETE")
+		var solved: bool = game.status_label.text.contains("SIGNAL RECEIVED") or game.status_label.text.contains("ALL FIELD TESTS COMPLETE")
 		if not _check(solved, "Puzzle %d should solve using its authored relay route" % (level + 1)):
 			return
 		if level < EXPECTED_SOLUTIONS.size() - 1:
