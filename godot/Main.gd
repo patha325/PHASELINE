@@ -248,7 +248,7 @@ func _send_pulse() -> void:
 		if cell.type == "target":
 			received = true
 			break
-		if cell.type == "field":
+		if cell.type == "empty" or cell.type == "field":
 			break
 		if cell.type == "relay":
 			direction = [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT, Vector2i.UP][cell.dir]
