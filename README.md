@@ -12,7 +12,7 @@ Open `godot/project.godot` with Godot 4.7.2 stable and run the main scene. The n
 
 ## Tests
 
-Run `npm test` with Node.js 22 or newer. The tests execute the browser game logic in a lightweight DOM mock and verify that each puzzle starts unsolved, reaches the receiver through its intended relay rotations, and advances to the next level.
+Run `npm test` with Node.js 22 or newer. The tests execute the browser game logic in a lightweight DOM mock and verify that each puzzle starts unsolved, reaches the receiver through its intended relay rotations, and advances to the next level. GitHub Actions also imports the Godot project and runs `godot/tests/AutomatedPlaytest.gd`, which plays all three puzzles through the actual scene and checks campaign completion.
 
 ## First-release target
 
