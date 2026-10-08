@@ -1,4 +1,6 @@
-# PHASELINE prototype playtest
+# PHASELINE optional human feedback guide
+
+Automated validation is the default: GitHub Actions solves the live Godot boards and checks progression, misplays, and reset behavior. Use this guide only when people are available and subjective feedback on clarity or enjoyment would help. A human session is not required to run or pass CI.
 
 ## Purpose
 
@@ -42,16 +44,16 @@ Use a 1–5 rating (1 = strongly disagree, 5 = strongly agree):
 
 Then ask: “What was the most confusing moment?” and “What would you change first?”
 
-## Decision gate
+## Optional product feedback
 
-Treat these as initial signals, not statistical claims. Proceed to campaign expansion if:
+Treat these as initial signals, not statistical claims. If you choose to recruit players, consider campaign expansion when:
 
 - At least 4 of 5 players can describe the goal within one minute.
 - At least 4 of 5 solve puzzle 1 without a hint.
 - Average ratings for goal clarity and control predictability are at least 4/5.
 - Most players want to continue after the first puzzle.
 
-If a threshold is missed, fix the rules, feedback, or first-puzzle layout and repeat a small round before expanding to 30 levels.
+If a threshold is missed, consider fixing the rules, feedback, or first-puzzle layout before expanding to 30 levels. Automated checks continue to catch broken routes and regressions, but they cannot judge enjoyment or discover every usability problem.
 
 ## Session notes template
 
