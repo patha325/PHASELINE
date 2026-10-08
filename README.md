@@ -25,3 +25,4 @@ Run `npm test` with Node.js 22 or newer. The tests execute the browser game logi
 ## Development plan
 
 See `STEAM_RELEASE_PLAN.md` for the staged roadmap and release gates.
+Use `PLAYTEST_PROTOCOL.md` to run the next first-time-player sessions and decide whether the core loop is ready for campaign expansion.
