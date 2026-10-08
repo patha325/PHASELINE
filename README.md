@@ -12,7 +12,7 @@ Open `godot/project.godot` with Godot 4.7.2 stable and run the main scene. The n
 
 ## Tests
 
-Run `npm test` with Node.js 22 or newer. The tests execute the browser game logic in a lightweight DOM mock and verify that each puzzle starts unsolved, reaches the receiver through its intended relay rotations, and advances to the next level. GitHub Actions also imports the Godot project and runs `godot/tests/AutomatedPlaytest.gd`, which plays all three puzzles through the actual scene and checks campaign completion.
+Run `npm test` with Node.js 22 or newer. The tests execute the browser game logic in a lightweight DOM mock and verify that each puzzle starts unsolved, reaches the receiver through its intended relay rotations, and advances to the next level. GitHub Actions imports the Godot project and runs `godot/tests/AutomatedPlaytest.gd`. The Godot test searches each actual board for a valid relay route, plays the lowest-click route through the scene, verifies campaign progression, and checks randomized relay misplays and reset behavior. This is the default repeatable playtest and does not need a person to operate it.
 
 ## First-release target
 
@@ -25,4 +25,4 @@ Run `npm test` with Node.js 22 or newer. The tests execute the browser game logi
 ## Development plan
 
 See `STEAM_RELEASE_PLAN.md` for the staged roadmap and release gates.
-Use `PLAYTEST_PROTOCOL.md` to run the next first-time-player sessions and decide whether the core loop is ready for campaign expansion.
+`PLAYTEST_PROTOCOL.md` is an optional guide for gathering subjective feedback about clarity and enjoyment; human sessions are not required for automated CI validation.
