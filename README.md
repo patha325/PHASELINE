@@ -8,11 +8,11 @@ Open `index.html` in a modern desktop browser. Click relay tiles to rotate them,
 
 ## Godot project
 
-Open `godot/project.godot` with Godot 4.7.2 stable and run the main scene. The native prototype contains the same three puzzles, keyboard controls, move counts, level progression, and a local save for unlocked progress. It has been code-reviewed here but not launched or exported because the Godot executable is unavailable in this workspace.
+Open `godot/project.godot` with Godot 4.7.2 stable and run the main scene. The native prototype contains the same three puzzles, keyboard controls, move counts, level progression, and a local save for unlocked progress. GitHub Actions exports Windows and Linux builds; it launches the Linux release export headlessly as a packaged-build smoke test.
 
 ## Tests
 
-Run `npm test` with Node.js 22 or newer. The tests execute the browser game logic in a lightweight DOM mock and verify that each puzzle starts unsolved, reaches the receiver through its intended relay rotations, and advances to the next level. GitHub Actions imports the Godot project and runs `godot/tests/AutomatedPlaytest.gd`. The Godot test searches each actual board for a valid relay route, plays the lowest-click route through the scene, verifies campaign progression, and checks randomized relay misplays and reset behavior. This is the default repeatable playtest and does not need a person to operate it.
+Run `npm test` with Node.js 22 or newer. The tests execute the browser game logic in a lightweight DOM mock and verify that each puzzle starts unsolved, reaches the receiver through its intended relay rotations, and advances to the next level. GitHub Actions imports the Godot project and runs `godot/tests/AutomatedPlaytest.gd`. The Godot test searches each actual board for a valid relay route, plays the lowest-click route through the scene, verifies campaign progression, and checks randomized relay misplays and reset behavior. CI exports Windows and Linux release builds, launches the Linux export headlessly, and uploads the Windows executable as a 14-day Actions artifact.
 
 ## First-release target
 
