@@ -58,6 +58,11 @@ jobs:
           godot/build/linux/PHASELINE.x86_64 --headless --quit-after 5 > /tmp/phaseline-export-smoke.log 2>&1
           cat /tmp/phaseline-export-smoke.log
           if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' /tmp/phaseline-export-smoke.log; then exit 1; fi
+      - name: Export macOS universal release build
+        run: |
+          mkdir -p godot/build/macos
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --export-release "macOS" build/macos/PHASELINE.zip
+          test -s godot/build/macos/PHASELINE.zip
       - name: Upload Windows build artifact
         uses: actions/upload-artifact@v4
         with:
@@ -65,3 +70,34 @@ jobs:
           path: godot/build/windows/PHASELINE.exe
           if-no-files-found: error
           retention-days: 14
+      - name: Upload macOS build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PHASELINE-macOS-${{ github.sha }}
+          path: godot/build/macos/PHASELINE.zip
+          if-no-files-found: error
+          retention-days: 14
+
+  macos-smoke:
+    name: macOS packaged build smoke test
+    needs: test
+    runs-on: macos-15
+    steps:
+      - name: Download macOS build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: PHASELINE-macOS-${{ github.sha }}
+          path: /tmp/phaseline-macos
+      - name: Run the exported macOS app headlessly
+        run: |
+          mkdir -p /tmp/phaseline-macos/unpacked
+          unzip -q /tmp/phaseline-macos/PHASELINE.zip -d /tmp/phaseline-macos/unpacked
+          APP_PATH="$(find /tmp/phaseline-macos/unpacked -type d -name '*.app' -print -quit)"
+          test -n "$APP_PATH"
+          test -f "$APP_PATH/Contents/Info.plist"
+          APP_EXECUTABLE="$(find "$APP_PATH/Contents/MacOS" -type f -print -quit)"
+          test -n "$APP_EXECUTABLE"
+          chmod +x "$APP_EXECUTABLE"
+          "$APP_EXECUTABLE" --headless --quit-after 5 > /tmp/phaseline-macos-smoke.log 2>&1
+          cat /tmp/phaseline-macos-smoke.log
+          if grep -E 'SCRIPT ERROR|Parse Error|ERROR:' /tmp/phaseline-macos-smoke.log; then exit 1; fi
