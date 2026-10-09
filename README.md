@@ -12,7 +12,9 @@ Open `godot/project.godot` with Godot 4.7.2 stable and run the main scene. The n
 
 ## Tests
 
-Run `npm test` with Node.js 22 or newer. The tests execute the browser game logic in a lightweight DOM mock and verify that each puzzle starts unsolved, reaches the receiver through its intended relay rotations, and advances to the next level. GitHub Actions imports the Godot project and runs `godot/tests/AutomatedPlaytest.gd`. The Godot test searches each actual board for a valid relay route, plays the lowest-click route through the scene, verifies campaign progression, and checks randomized relay misplays and reset behavior. CI exports Windows and Linux release builds, launches the Linux export headlessly, and uploads the Windows executable as a 14-day Actions artifact.
+Run `npm test` with Node.js 22 or newer. The tests execute the browser game logic in a lightweight DOM mock and verify that each puzzle starts unsolved, reaches the receiver through its intended relay rotations, and advances to the next level. GitHub Actions imports the Godot project and runs `godot/tests/AutomatedPlaytest.gd`. The Godot test searches each actual board for a valid relay route, plays the lowest-click route through the scene, verifies campaign progression, and checks randomized relay misplays and reset behavior. CI exports Windows, Linux, and universal macOS release builds, launches the Linux export headlessly, runs the macOS app headlessly on a macOS runner, and uploads Windows and macOS builds as 14-day Actions artifacts.
+
+The macOS CI artifact is an unsigned development build. Gatekeeper may block it when downloaded; a public macOS release will need signing and notarization.
 
 ## First-release target
 
