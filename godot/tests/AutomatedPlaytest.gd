@@ -13,6 +13,16 @@ func _run_playtest() -> void:
 
 	if not _check(game.levels.size() == 3, "Expected three playable puzzles"):
 		return
+	game._update_responsive_layout(360.0)
+	if not _check(not game.side_panel.visible, "Compact layouts should hide the desktop mission panel"):
+		return
+	var max_phone_cell_width: float = (360.0 - 44.0 - (game.W - 1) * 8.0) / game.W
+	for cell_button in game.cell_buttons:
+		if not _check(cell_button.custom_minimum_size.x <= max_phone_cell_width, "Phone board tiles should fit within the viewport width"):
+			return
+	game._update_responsive_layout(1120.0)
+	if not _check(game.side_panel.visible, "Wide layouts should show the mission panel"):
+		return
 	# Ignore any progress file from a previous local run so CI always starts at puzzle 1.
 	game.level_index = 0
 	game._load_level()

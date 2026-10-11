@@ -2,7 +2,8 @@ extends Control
 
 const W := 7
 const H := 5
-const CELL_MIN := Vector2(78, 78)
+const CELL_MIN_SIZE := 36.0
+const CELL_MAX_SIZE := 78.0
 const BG := Color("080b12")
 const PANEL := Color("101722")
 const CYAN := Color("71f4e0")
@@ -20,12 +21,17 @@ var status_label: Label
 var board_grid: GridContainer
 var send_button: Button
 var next_button: Button
+var main_panel: PanelContainer
+var side_panel: PanelContainer
+var title_label: Label
 
 func _ready() -> void:
 	_build_levels()
 	_load_progress()
 	_build_ui()
 	_load_level()
+	get_viewport().size_changed.connect(_update_responsive_layout)
+	_update_responsive_layout()
 
 func _build_levels() -> void:
 	levels = [
@@ -81,7 +87,7 @@ func _build_ui() -> void:
 	layout.add_theme_constant_override("separation", 22)
 	outer.add_child(layout)
 
-	var main_panel := _panel()
+	main_panel = _panel()
 	main_panel.custom_minimum_size = Vector2(760, 0)
 	layout.add_child(main_panel)
 	var main_column := VBoxContainer.new()
@@ -90,7 +96,8 @@ func _build_ui() -> void:
 
 	var eyebrow := _label("SIGNAL SCIENCE  /  FIELD TEST", 12, CYAN)
 	main_column.add_child(eyebrow)
-	main_column.add_child(_label("PHASELINE", 42, Color("edf5f7")))
+	title_label = _label("PHASELINE", 42, Color("edf5f7"))
+	main_column.add_child(title_label)
 	level_label = _label("", 14, MUTED)
 	main_column.add_child(level_label)
 	board_grid = GridContainer.new()
@@ -100,7 +107,7 @@ func _build_ui() -> void:
 	main_column.add_child(board_grid)
 	for i in range(W * H):
 		var cell := Button.new()
-		cell.custom_minimum_size = CELL_MIN
+		cell.custom_minimum_size = Vector2(CELL_MAX_SIZE, CELL_MAX_SIZE)
 		cell.focus_mode = Control.FOCUS_ALL
 		cell.add_theme_font_size_override("font_size", 30)
 		cell.pressed.connect(_on_cell_pressed.bind(i))
@@ -129,12 +136,12 @@ func _build_ui() -> void:
 	next_button.hide()
 	actions.add_child(next_button)
 
-	var side := _panel()
-	side.custom_minimum_size = Vector2(270, 0)
-	layout.add_child(side)
+	side_panel = _panel()
+	side_panel.custom_minimum_size = Vector2(270, 0)
+	layout.add_child(side_panel)
 	var notes := VBoxContainer.new()
 	notes.add_theme_constant_override("separation", 16)
-	side.add_child(notes)
+	side_panel.add_child(notes)
 	notes.add_child(_label("MISSION", 14, Color("edf5f7")))
 	notes.add_child(_label("Carry a neutrino message through the planet. Rotate relay arrows to guide the pulse to its receiver.", 14, MUTED, true))
 	notes.add_child(_label("CONTROLS", 14, Color("edf5f7")))
@@ -168,6 +175,19 @@ func _button(text: String) -> Button:
 	button.add_theme_font_size_override("font_size", 14)
 	return button
 
+func _update_responsive_layout(viewport_width_override: float = -1.0) -> void:
+	if not is_node_ready() or main_panel == null:
+		return
+	var viewport_width := viewport_width_override if viewport_width_override > 0.0 else get_viewport_rect().size.x
+	var compact := viewport_width < 850.0
+	main_panel.custom_minimum_size.x = 0.0 if compact else 760.0
+	side_panel.visible = not compact
+	title_label.add_theme_font_size_override("font_size", 34 if compact else 42)
+	var cell_size := clampf(floor((viewport_width - 44.0 - (W - 1) * 8.0) / W), CELL_MIN_SIZE, CELL_MAX_SIZE)
+	for cell in cell_buttons:
+		cell.custom_minimum_size = Vector2(cell_size, cell_size)
+		cell.add_theme_font_size_override("font_size", int(clampf(cell_size * 0.38, 18.0, 30.0)))
+
 func _load_level() -> void:
 	if levels.is_empty():
 		return
@@ -190,6 +210,7 @@ func _render_board() -> void:
 		var tile_type: String = cell.type
 		button.disabled = tile_type != "relay"
 		button.text = "" if tile_type == "empty" else _symbol(cell)
+		button.add_theme_font_size_override("font_size", int(clampf(button.custom_minimum_size.x * 0.38, 18.0, 30.0)))
 		var style := StyleBoxFlat.new()
 		style.set_corner_radius_all(9)
 		style.set_border_width_all(1)
