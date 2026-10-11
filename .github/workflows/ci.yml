@@ -99,7 +99,7 @@ jobs:
           export/android/java_sdk_path = "$JAVA_HOME"
           EOF
       - name: Install Godot Gradle build template
-        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --install-android-build-template
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --editor --path godot --install-android-build-template --quit
       - name: Export Android App Bundle
         run: |
           mkdir -p godot/build/android
