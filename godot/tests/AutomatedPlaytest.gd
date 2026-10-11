@@ -16,7 +16,7 @@ func _run_playtest() -> void:
 	game._update_responsive_layout(360.0)
 	if not _check(not game.side_panel.visible, "Compact layouts should hide the desktop mission panel"):
 		return
-	var max_phone_cell_width := (360.0 - 44.0 - (game.W - 1) * 8.0) / game.W
+	var max_phone_cell_width: float = (360.0 - 44.0 - (game.W - 1) * 8.0) / game.W
 	for cell_button in game.cell_buttons:
 		if not _check(cell_button.custom_minimum_size.x <= max_phone_cell_width, "Phone board tiles should fit within the viewport width"):
 			return
