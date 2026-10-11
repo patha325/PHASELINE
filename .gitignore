@@ -3,3 +3,4 @@
 export/
 dist/
 godot/build/
+godot/android/

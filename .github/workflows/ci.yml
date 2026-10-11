@@ -77,6 +77,42 @@ jobs:
           path: godot/build/macos/PHASELINE.zip
           if-no-files-found: error
           retention-days: 14
+      - name: Set up Java 17 for Android export
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+      - name: Install Android 16 export packages
+        run: sdkmanager --install "platform-tools" "platforms;android-36" "build-tools;36.0.0" "ndk;28.1.13356709"
+      - name: Configure Godot Android SDK paths
+        run: |
+          mkdir -p "$HOME/.config/godot"
+          cat > "$HOME/.config/godot/editor_settings-4.tres" <<EOF
+          [gd_resource type="EditorSettings" format=3]
+
+          [resource]
+          export/android/android_sdk_path = "$ANDROID_HOME"
+          export/android/java_sdk_path = "$JAVA_HOME"
+          EOF
+      - name: Install Godot Gradle build template
+        run: /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --install-android-build-template
+      - name: Export Android App Bundle
+        run: |
+          mkdir -p godot/build/android
+          /tmp/godot/Godot_v4.7.2-stable_linux.x86_64 --headless --path godot --export-debug "Android" build/android/PHASELINE.aab
+          test -s godot/build/android/PHASELINE.aab
+          unzip -t godot/build/android/PHASELINE.aab
+          unzip -l godot/build/android/PHASELINE.aab | grep -q 'BundleConfig.pb'
+          unzip -l godot/build/android/PHASELINE.aab | grep -q 'base/manifest/AndroidManifest.xml'
+      - name: Upload Android App Bundle artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PHASELINE-Android-AAB-${{ github.sha }}
+          path: godot/build/android/PHASELINE.aab
+          if-no-files-found: error
+          retention-days: 14
 
   macos-smoke:
     name: macOS packaged build smoke test
